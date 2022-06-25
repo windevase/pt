@@ -1,5 +1,7 @@
 provider "aws" {
   region = "ap-northeast-2"
+  shared_credentials_file = "/Users/k/.aws/credentials"
+  profile = "default"
 }
 
 resource "aws_vpc" "hjko_vpc" {    
