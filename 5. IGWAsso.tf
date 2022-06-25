@@ -26,10 +26,10 @@ resource "aws_route_table" "private" {
 
 resource "aws_route_table_association" "hjko_igas_puba" {
   subnet_id       =   aws_subnet.hjko_puba.vpc_id
-  route_table_id  =   aws_route_table.hjko_rt.id    
+  route_table_id  =   aws_route_table.public.id    
 }
 
 resource "aws_route_table_association" "hjko_igas_pubc" {
   subnet_id       =   aws_subnet.hjko_puba.vpc_id
-  route_table_id  =   aws_route_table.hjko_rt.id    
+  route_table_id  =   aws_route_table.public.id    
 }
