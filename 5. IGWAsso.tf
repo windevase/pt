@@ -1,4 +1,4 @@
-resource "aws_route_table" "hjko_rt" {
+resource "aws_route_table" "public" {
         vpc_id = aws_vpc.hjko_vpc.id
 
         route {
