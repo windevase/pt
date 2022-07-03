@@ -12,3 +12,23 @@ resource "aws_lb" "hjko_alb" {
 output "dns_name" {
   value = aws_lb.hjko_alb.dns_name
 }
+
+resource "aws_lb_target_group" "alb_target" {
+    name = "hjko-albtg"
+    port = "80"
+    protocol = "HTTP"
+    target_type = "instance"
+    vpc_id = aws_vpc.hjko_vpc.id
+
+}
+
+resource "aws_lb_listener" "alb_front_http" {
+    load_balancer_arn = aws_lb.hjko_alb.arn
+    port = "80"
+    protocol = "HTTP"
+  
+    default_action {
+        type = "forward"
+        target_group_arn = aws_lb_target_group.alb_target.arn
+    }
+}
