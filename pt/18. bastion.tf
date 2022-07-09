@@ -9,7 +9,7 @@ resource "aws_instance" "bastion" {
 #!/bin/bash
 sed -i "s/#Port 22/Port ${var.sg_bastion.from_port}/g" /etc/ssh/sshd_config
 systemctl restart sshd
-sudo "echo '${var.key.private}' > /home/ec2-user/${var.key.name}"
+sudo "echo '${var.key.private}' > /home/ec2-user/id_rsa"
 sudo "chmod 600 /home/ubuntu/${var.key.name}"
 EOF
 
