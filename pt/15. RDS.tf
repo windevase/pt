@@ -4,7 +4,7 @@ resource "aws_db_instance" "database" {
     engine_version         = var.database.engine_version
     instance_class         = var.database.instance_class
     multi_az               = var.database.multi_az
-    db_name                   = var.database.db_name
+    db_name                = var.database.db_name
     username               = var.database.username
     password               = var.database.password
     db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.id
