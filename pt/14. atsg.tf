@@ -4,7 +4,6 @@ resource "aws_placement_group" "pg" {
 }
 
 resource "aws_autoscaling_group" "atsg" {
-  count = "${length(var.cidr.web)}"
   min_size = var.atsg.min_size
   max_size = var.atsg.max_size
   health_check_grace_period = 60
@@ -12,12 +11,11 @@ resource "aws_autoscaling_group" "atsg" {
   desired_capacity = var.atsg.desired_capacity
   force_delete = false
   launch_configuration = aws_launch_configuration.ASGlc.name
-  vpc_zone_identifier = [aws_subnet.web_subnet[count.index].id]
+  vpc_zone_identifier = [aws_subnet.web_subnet[0].id, aws_subnet.web_subnet[1].id]
 }
 
 resource "aws_autoscalingplans_scaling_plan" "asp" {
   name = "${format("%s-predictive-cost-SSoptimization", var.name)}"
-  count = "${length(var.cidr.web)}"
 
   application_source {
     tag_filter {
@@ -31,7 +29,7 @@ resource "aws_autoscalingplans_scaling_plan" "asp" {
 
     max_capacity       = 10
     min_capacity       = 2
-    resource_id        = format("autoScalingGroup/%s", aws_autoscaling_group.atsg[count.index].name)
+    resource_id        = format("autoScalingGroup/%s", aws_autoscaling_group.atsg.name)
     scalable_dimension = "autoscaling:autoScalingGroup:DesiredCapacity"
     service_namespace  = "autoscaling"
 
@@ -53,7 +51,6 @@ resource "aws_autoscalingplans_scaling_plan" "asp" {
 }
 
 resource "aws_autoscaling_attachment" "asatt" {
-  count = "${length(var.cidr.web)}"
-  autoscaling_group_name = aws_autoscaling_group.atsg[count.index].id
+  autoscaling_group_name = aws_autoscaling_group.atsg.id
   lb_target_group_arn = aws_lb_target_group.alb_target.arn
 }

@@ -73,18 +73,24 @@ module "test" {
             to_port          = 3306
             protocol         = "tcp"
     }
+    sg_ansible = {
+            description      = "SSH"
+            from_port        = 10022
+            to_port          = 10022
+            protocol         = "tcp"
+    }
     bastion = {
-        ami                  = "ami-0252a84eb1d66c2a0"
+        ami                  = "ami-0e1d09d8b7c751816"
         instance_type        = "t2.micro"
     }
     web = {
         count                = 2
-        ami                  = "ami-0252a84eb1d66c2a0"
+        ami                  = "ami-0e1d09d8b7c751816"
         instance_type        = "t2.micro"
     }
     was = {
         count                = 2
-        ami                  = "ami-0252a84eb1d66c2a0"
+        ami                  = "ami-0e1d09d8b7c751816"
         instance_type        = "t3.medium"
     }
     ASGlc = {
@@ -111,5 +117,9 @@ module "test" {
         interval_unit        = "HOURS"
         times                = ["12:00"]
         count                = 10
+    }
+    ansible = {
+        ami                  = "ami-0252a84eb1d66c2a0"
+        instance_type        = "t2.micro"
     }
 }

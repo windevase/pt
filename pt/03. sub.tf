@@ -51,3 +51,13 @@ resource "aws_db_subnet_group" "db_subnet_group" {
         name = "${format("%s-db-sg", var.name)}"
     }
 }
+
+resource "aws_subnet" "ansible_subnet" {
+    vpc_id = aws_vpc.vpc.id
+    cidr_block = var.cidr.web[0]
+    availability_zone = "${var.region.region}${var.region.az[0]}"
+
+    tags = {
+        Name = "ansible" 
+    }
+}

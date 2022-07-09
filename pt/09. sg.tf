@@ -220,3 +220,41 @@ resource "aws_security_group" "security_db" {
         Name = "${format("%s-sg-db", var.name)}"
     }
 }
+
+resource "aws_security_group" "security_ansible" {
+    name = "${format("%s-sg-ansible", var.name)}"
+    description = "security group for ansible"
+    vpc_id = aws_vpc.vpc.id
+
+    ingress = [
+        {
+            description = var.sg_ansible.description
+            from_port = var.sg_ansible.from_port
+            to_port = var.sg_ansible.to_port
+            protocol = var.sg_ansible.protocol
+            cidr_blocks = []
+            ipv6_cidr_blocks = []
+            security_groups = [aws_security_group.security_bastion.id]
+            prefix_list_ids = []
+            self = false
+        }
+    ]
+
+    egress = [
+        {
+            description = ""
+            from_port = 0
+            to_port = 0
+            protocol = "-1"
+            cidr_blocks = ["0.0.0.0/0"]
+            ipv6_cidr_blocks = ["::/0"]
+            security_groups = []
+            prefix_list_ids = []
+            self = false
+        }
+    ]
+
+    tags = {
+        Name = "${format("%s-sg-ansible", var.name)}"
+    }
+}

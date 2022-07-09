@@ -60,6 +60,14 @@ variable "sg_db" {
         protocol             = string
     })
 }
+variable "sg_ansible" {
+    type        = object({
+        description          = string
+        from_port            = number
+        to_port              = number
+        protocol             = string
+    })
+}
 variable "bastion" {
     type        = object({
         ami                  = string
@@ -103,6 +111,12 @@ variable "database" {
         username             = string
         password             = string
         backup_window        = string
+    })
+}
+variable "ansible" {
+    type        = object({
+        ami                  = string
+        instance_type        = string
     })
 }
 variable "backup" {
