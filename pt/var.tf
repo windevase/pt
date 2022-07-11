@@ -22,7 +22,6 @@ variable "cidr" {
         vpc                  = string
         pub                  = list(string)
         web                  = list(string)
-        was                  = list(string)
         db                   = list(string)
     })
 }
@@ -67,13 +66,6 @@ variable "bastion" {
     })
 }
 variable "web" {
-    type        = object({
-        count                = number
-        ami                  = string
-        instance_type        = string
-    })
-}
-variable "was" {
     type        = object({
         count                = number
         ami                  = string
