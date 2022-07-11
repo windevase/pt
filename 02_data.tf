@@ -2,9 +2,11 @@ module "test" {
     source                   = "./pt"
     name                     = "fox"
     key = {
-        name                 = "hjko-key"
-        public               = file("./hjko.pub")
-        private              = file("./hjko")
+        name                 = "team4-key"
+        public               = file("./key/hjko.pub")
+        private              = file("./key/hjko")
+        # public               = file("./key/mhan2.key.pub")
+        # private              = file("./key/mhan2.key")
     }
     domain                   = "bespin.link"
     region = {
@@ -12,11 +14,13 @@ module "test" {
         az                   = ["a", "c"]
     }
     cidr = {
-        vpc                  = "192.168.0.0/16"
-        pub                  = ["192.168.0.0/24", "192.168.1.0/24"]
-        web                  = ["192.168.2.0/24", "192.168.3.0/24"]
-        db                   = ["192.168.100.0/24", "192.168.101.0/24"]
-        ansible              = "192.168.6.0/24"
+        vpc                  = "10.1.0.0/16"
+
+        // subnet
+        pub                  = ["10.1.0.0/24", "10.1.1.0/24"]       //pub-a, pub-c
+        web                  = ["10.1.10.0/24", "10.1.11.0/24"]     //web-a, web-c
+        db                   = ["10.1.100.0/24", "10.1.101.0/24"]   //db-a, db-c
+        ansible              = ["10.1.201.0/24"]
     }
     sg_bastion = {
             description      = "SSH"
@@ -29,14 +33,14 @@ module "test" {
     sg_web = [
         {
             description      = "SSH-bastion"
-            from_port        = 10022
-            to_port          = 10022
+            from_port        = 22
+            to_port          = 22
             protocol         = "tcp"
         },
         {
             description      = "SSH-ansible"
-            from_port        = 10022
-            to_port          = 10022
+            from_port        = 22
+            to_port          = 22
             protocol         = "tcp"
         },
         {
@@ -67,7 +71,7 @@ module "test" {
         ami                  = "ami-0e1d09d8b7c751816"
         instance_type        = "t2.micro"
     }
-    ASGlc = {
+    asgc = {
         instance_type = "t2.micro"
     }
     atsg = {
@@ -84,12 +88,12 @@ module "test" {
         db_name              = "petclinic"
         username             = "root"
         password             = "petclinic"
-        backup_window        = "08:10-08:40"
+        backup_window        = "03:00-03:30"
     }
     backup = {
         interval             = 8
         interval_unit        = "HOURS"
-        times                = ["12:00"]
+        times                = ["00:00"]
         count                = 10
     }
     ansible = {

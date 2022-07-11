@@ -23,6 +23,7 @@ variable "cidr" {
         pub                  = list(string)
         web                  = list(string)
         db                   = list(string)
+        ansible              = list(string)
     })
 }
 variable "sg_bastion" {
@@ -72,7 +73,7 @@ variable "web" {
         instance_type        = string
     })
 }
-variable "ASGlc" {
+variable "asgc" {
     type        = object({
         instance_type        = string
     })

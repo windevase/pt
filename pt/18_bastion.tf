@@ -2,8 +2,8 @@ resource "aws_instance" "bastion" {
     ami = var.bastion.ami
     instance_type = var.bastion.instance_type
     key_name = var.key.name
-    vpc_security_group_ids = [aws_security_group.security_bastion.id]
-    subnet_id = aws_subnet.public.0.id
+    vpc_security_group_ids = [aws_security_group.sg_bastion.id]
+    subnet_id = aws_subnet.pub_sub[0].id
     iam_instance_profile = aws_iam_instance_profile.profile_bastion.name
     user_data = <<EOF
 #!/bin/bash
@@ -23,13 +23,16 @@ EOF
         cpu_credits = "unlimited"
     }
 }
+
+// public IP 할당
  resource "aws_eip" "eip_bastion" {
     vpc = true
 
     instance = aws_instance.bastion.id
-    depends_on = [aws_internet_gateway.internet_gateway]
+    depends_on = [aws_internet_gateway.igw]
 }
 
+// Bastion IAM
 resource "aws_iam_instance_profile" "profile_bastion" {
   name = "${format("%s-profile-bastion", var.name)}"
   role = aws_iam_role.role_bastion.name

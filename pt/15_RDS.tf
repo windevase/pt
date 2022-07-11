@@ -7,16 +7,25 @@ resource "aws_db_instance" "database" {
     db_name                = var.database.db_name
     username               = var.database.username
     password               = var.database.password
-    db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.id
-    vpc_security_group_ids = [aws_security_group.security_db.id]
+    db_subnet_group_name   = aws_db_subnet_group.db_subg.id
+    vpc_security_group_ids = [aws_security_group.sg_db.id]
     # availability_zone      = "ap-northeast-2a"
     identifier             = "${format("%s-db", var.name)}"
     enabled_cloudwatch_logs_exports = ["error", "audit", "general", "slowquery"]
     skip_final_snapshot    = true
-    backup_window          = "07:00-08:00"
+    backup_window          = var.database.backup_window
     backup_retention_period = 4
     apply_immediately      = true
     tags = {
             Name = "${format("%s-db", var.name)}"
+    }
+}
+
+resource "aws_db_subnet_group" "db_subg" {
+    name = "db-sg"
+    subnet_ids = [aws_subnet.db_sub[0].id, aws_subnet.db_sub[1].id]
+    # vpc_id = aws_vpc.vpc.id
+    tags = {
+        Name = "${format("%s-subnet-group", var.name)}"
     }
 }

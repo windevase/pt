@@ -2,8 +2,8 @@ resource "aws_instance" "ansible" {
     ami = var.ansible.ami
     instance_type = var.ansible.instance_type
     key_name = var.key.name
-    vpc_security_group_ids = [aws_security_group.security_ansible.id]
-    subnet_id = aws_subnet.ansible_subnet.id
+    vpc_security_group_ids = [aws_security_group.sg_ansible.id]
+    subnet_id = aws_subnet.ansible_sub.id
     iam_instance_profile = aws_iam_instance_profile.profile_ansible.name
     user_data = <<EOF
 #!/bin/bash

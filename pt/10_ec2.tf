@@ -1,10 +1,11 @@
+// WEB 인스턴스 생성
 resource "aws_instance" "web" {
     count = var.web.count
     ami = var.web.ami
     instance_type = var.web.instance_type
     key_name = var.key.name
-    vpc_security_group_ids = [aws_security_group.security_web.id]
-    subnet_id = aws_subnet.web_subnet[(count.index)%2].id
+    vpc_security_group_ids = [aws_security_group.sg_web.id]
+    subnet_id = aws_subnet.web_sub[(count.index)%2].id
     user_data = <<EOF
 #!/bin/bash
 sudo su -

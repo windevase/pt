@@ -1,5 +1,5 @@
-#  pub sub
-resource "aws_subnet" "public" {
+// public subnet
+resource "aws_subnet" "pub_sub" {
     vpc_id = aws_vpc.vpc.id
     count = "${length(var.cidr.pub)}"
     cidr_block = "${var.cidr.pub[count.index]}"
@@ -10,7 +10,8 @@ resource "aws_subnet" "public" {
     }
 }
 
-resource "aws_subnet" "web_subnet" {
+// web subnet - private
+resource "aws_subnet" "web_sub" {
     vpc_id = aws_vpc.vpc.id
     count = "${length(var.cidr.web)}"
     cidr_block = "${var.cidr.web[count.index]}"
@@ -21,7 +22,8 @@ resource "aws_subnet" "web_subnet" {
     }
 }
 
-resource "aws_subnet" "db_subnet" {
+// db subnet - private
+resource "aws_subnet" "db_sub" {
     vpc_id = aws_vpc.vpc.id
     count = "${length(var.cidr.db)}"
     cidr_block = "${var.cidr.db[count.index]}"
@@ -32,16 +34,9 @@ resource "aws_subnet" "db_subnet" {
     }
 }
 
-resource "aws_db_subnet_group" "db_subnet_group" {
-    name = "${format("%s-db-sg", var.name)}"
-    subnet_ids = "${aws_subnet.db_subnet.*.id}"
 
-    tags = {
-        name = "${format("%s-db-sg", var.name)}"
-    }
-}
-
-resource "aws_subnet" "ansible_subnet" {
+// ansible subnet - private
+resource "aws_subnet" "ansible_sub" {
     vpc_id = aws_vpc.vpc.id
     cidr_block = var.cidr.web[0]
     availability_zone = "${var.region.region}${var.region.az[0]}"

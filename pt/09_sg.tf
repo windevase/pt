@@ -1,4 +1,5 @@
-resource "aws_security_group" "security_bastion" {
+// Bastion 보안 그룹
+resource "aws_security_group" "sg_bastion" {
     name = "${format("%s-sg-bastion", var.name)}"
     description = "security group for bastion"
     vpc_id = aws_vpc.vpc.id
@@ -36,7 +37,8 @@ resource "aws_security_group" "security_bastion" {
     }
 }
 
-resource "aws_security_group" "security_alb" {
+// Application Load Balancer 보안그룹
+resource "aws_security_group" "sg_alb" {
     name = "${format("%s-sg-alb", var.name)}"
     description = "security group for alb"
     vpc_id = aws_vpc.vpc.id
@@ -85,7 +87,8 @@ resource "aws_security_group" "security_alb" {
     }
 }
 
-resource "aws_security_group" "security_web" {
+// WEB 보안그룹
+resource "aws_security_group" "sg_web" {
     name = "${format("%s-sg-web", var.name)}"
     description = "security group for web"
     vpc_id = aws_vpc.vpc.id
@@ -98,7 +101,7 @@ resource "aws_security_group" "security_web" {
             protocol = var.sg_web.0.protocol
             cidr_blocks = []
             ipv6_cidr_blocks = []
-            security_groups = [aws_security_group.security_bastion.id]
+            security_groups = [aws_security_group.sg_bastion.id]
             prefix_list_ids = []
             self = false
         },
@@ -109,7 +112,7 @@ resource "aws_security_group" "security_web" {
             protocol = var.sg_web.1.protocol
             cidr_blocks = []
             ipv6_cidr_blocks = []
-            security_groups = [aws_security_group.security_alb.id]
+            security_groups = [aws_security_group.sg_alb.id]
             prefix_list_ids = []
             self = false
         },
@@ -134,7 +137,8 @@ resource "aws_security_group" "security_web" {
     }
 }
 
-resource "aws_security_group" "security_db" {
+// DB 보안그룹
+resource "aws_security_group" "sg_db" {
     name = "${format("%s-sg-db", var.name)}"
     description = "security group for db"
     vpc_id = aws_vpc.vpc.id
@@ -147,7 +151,7 @@ resource "aws_security_group" "security_db" {
             protocol = var.sg_db.protocol
             cidr_blocks = []
             ipv6_cidr_blocks = []
-            security_groups = [aws_security_group.security_alb.id]
+            security_groups = [aws_security_group.sg_web.id]
             prefix_list_ids = []
             self = false
         }
@@ -172,7 +176,9 @@ resource "aws_security_group" "security_db" {
     }
 }
 
-resource "aws_security_group" "security_ansible" {
+
+// Ansible 보안그룹
+resource "aws_security_group" "sg_ansible" {
     name = "${format("%s-sg-ansible", var.name)}"
     description = "security group for ansible"
     vpc_id = aws_vpc.vpc.id
@@ -185,7 +191,7 @@ resource "aws_security_group" "security_ansible" {
             protocol = var.sg_ansible.protocol
             cidr_blocks = []
             ipv6_cidr_blocks = []
-            security_groups = [aws_security_group.security_bastion.id]
+            security_groups = [aws_security_group.sg_bastion.id]
             prefix_list_ids = []
             self = false
         }
