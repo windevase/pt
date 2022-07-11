@@ -47,26 +47,6 @@ module "test" {
             protocol         = "tcp"
         }
     ]
-    sg_was = [
-        {
-            description      = "SSH-bastion"
-            from_port        = 10022
-            to_port          = 10022
-            protocol         = "tcp"
-        },
-        {
-            description      = "SSH-ansible"
-            from_port        = 10022
-            to_port          = 10022
-            protocol         = "tcp"
-        },
-        {
-            description      = "Tomcat"
-            from_port        = 8080
-            to_port          = 8080
-            protocol         = "tcp"
-        }
-    ]
     sg_db = {
             description      = "MySQL"
             from_port        = 3306
