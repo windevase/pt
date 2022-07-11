@@ -11,7 +11,7 @@ resource "aws_autoscaling_group" "atsg" {
   desired_capacity = var.atsg.desired_capacity
   force_delete = false
   launch_configuration = aws_launch_configuration.ASGlc.name
-  vpc_zone_identifier = [aws_subnet.web_subnet[0].id, aws_subnet.web_subnet[1].id]
+  vpc_zone_identifier = "${aws_subnet.web_subnet.*.id}"
 }
 
 resource "aws_autoscalingplans_scaling_plan" "asp" {

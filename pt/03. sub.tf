@@ -21,17 +21,6 @@ resource "aws_subnet" "web_subnet" {
     }
 }
 
-resource "aws_subnet" "was_subnet" {
-    vpc_id = aws_vpc.vpc.id
-    count = "${length(var.cidr.was)}"
-    cidr_block = "${var.cidr.was[count.index]}"
-    availability_zone = "${var.region.region}${var.region.az[count.index]}"
-
-    tags = {
-        Name = "${format("was-%s", var.region.az[count.index])}" 
-    }
-}
-
 resource "aws_subnet" "db_subnet" {
     vpc_id = aws_vpc.vpc.id
     count = "${length(var.cidr.db)}"

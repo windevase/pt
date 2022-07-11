@@ -9,9 +9,3 @@ resource "aws_route_table_association" "web_ass" {
     subnet_id = "${aws_subnet.web_subnet[count.index].id}"
     route_table_id = "${aws_route_table.web_route[count.index].id}"
 }
-
-resource "aws_route_table_association" "was_ass" {
-    count = "${length(var.cidr.was)}"
-    subnet_id = "${aws_subnet.was_subnet[count.index].id}"
-    route_table_id = "${aws_route_table.was_route[count.index].id}"
-}
