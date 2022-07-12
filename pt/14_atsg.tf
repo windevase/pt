@@ -11,7 +11,7 @@ resource "aws_autoscaling_group" "atsg" {
   desired_capacity = var.atsg.desired_capacity
   force_delete = false
   launch_configuration = aws_launch_configuration.as_conf.name
-  vpc_zone_identifier = [for sub in aws_subnet.web_sub : sub.id]
+  vpc_zone_identifier = "${aws_subnet.web_sub.*.id}"
 }
 
 // AutoScling 크기 조정 정책 설정

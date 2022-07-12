@@ -34,7 +34,7 @@ resource "aws_subnet" "db_sub" {
     }
 }
 
-
+/*
 // ansible subnet - private
 resource "aws_subnet" "ansible_sub" {
     vpc_id = aws_vpc.vpc.id
@@ -45,3 +45,4 @@ resource "aws_subnet" "ansible_sub" {
         Name = "ansible" 
     }
 }
+*/

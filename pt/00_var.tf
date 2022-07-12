@@ -9,7 +9,7 @@ variable "key" {
     })
 }
 variable "domain" {
-    type                     = string
+    type                     = list(string)
 }
 variable "region" {
     type        = object({
@@ -23,7 +23,7 @@ variable "cidr" {
         pub                  = list(string)
         web                  = list(string)
         db                   = list(string)
-        ansible              = list(string)
+        # ansible              = list(string)
     })
 }
 variable "sg_bastion" {

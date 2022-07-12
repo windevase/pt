@@ -1,6 +1,6 @@
-module "test" {
+module "dev" {
     source                   = "./pt"
-    name                     = "fox"
+    name                     = "dev"
     key = {
         name                 = "team4-key"
         public               = file("./key/hjko.pub")
@@ -8,19 +8,19 @@ module "test" {
         # public               = file("./key/mhan2.key.pub")
         # private              = file("./key/mhan2.key")
     }
-    domain                   = "bespin.link"
+    domain                   = []
     region = {
         region               = "ap-northeast-2"
         az                   = ["a", "c"]
     }
     cidr = {
-        vpc                  = "10.1.0.0/16"
+        vpc                  = "10.0.0.0/16"
 
         // subnet
-        pub                  = ["10.1.0.0/24", "10.1.1.0/24"]       //pub-a, pub-c
-        web                  = ["10.1.10.0/24", "10.1.11.0/24"]     //web-a, web-c
-        db                   = ["10.1.100.0/24", "10.1.101.0/24"]   //db-a, db-c
-        ansible              = ["10.1.201.0/24"]
+        pub                  = ["10.0.0.0/24", "10.0.1.0/24"]       //pub-a, pub-c
+        web                  = ["10.0.10.0/24", "10.0.11.0/24"]     //web-a, web-c
+        db                   = ["10.0.100.0/24", "10.0.101.0/24"]   //db-a, db-c
+        # ansible              = ["10.0.201.0/24"]
     }
     sg_bastion = {
             description      = "SSH"

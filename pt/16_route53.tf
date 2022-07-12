@@ -1,10 +1,12 @@
 resource "aws_route53_zone" "route53_zone" {
-  name       = var.domain
+  count = length(var.domain)
+  name       = var.domain[count.index]
 }
 
 resource "aws_route53_record" "route53_record" {
-  zone_id = aws_route53_zone.route53_zone.zone_id
-  name    = "${format("%s.%s", var.name, var.domain)}"
+  count = length(var.domain)
+  zone_id = aws_route53_zone.route53_zone[count.index].zone_id
+  name    = "${format("%s.%s", var.name, var.domain[count.index])}"
   type    = "A"
 
   alias {
@@ -15,8 +17,9 @@ resource "aws_route53_record" "route53_record" {
 }
 
 resource "aws_acm_certificate" "cert" {
-  domain_name       = var.domain
-  subject_alternative_names = ["*.${var.domain}"]
+  count = length(var.domain)
+  domain_name       = var.domain[count.index]
+  subject_alternative_names = ["*.${var.domain[count.index]}"]
   validation_method = "DNS"
 
   lifecycle {
@@ -25,13 +28,15 @@ resource "aws_acm_certificate" "cert" {
 }
 
 resource "aws_route53_record" "route53_record_cert" {
-  zone_id = aws_route53_zone.route53_zone.zone_id
-  name                   = tolist(aws_acm_certificate.cert.domain_validation_options)[0].resource_record_name
-  type                   = tolist(aws_acm_certificate.cert.domain_validation_options)[0].resource_record_type
-  records                = [tolist(aws_acm_certificate.cert.domain_validation_options)[0].resource_record_value]
+  count = length(var.domain)
+  zone_id = aws_route53_zone.route53_zone[count.index].zone_id
+  name                   = tolist(aws_acm_certificate.cert[count.index].domain_validation_options)[0].resource_record_name
+  type                   = tolist(aws_acm_certificate.cert[count.index].domain_validation_options)[0].resource_record_type
+  records                = [tolist(aws_acm_certificate.cert[count.index].domain_validation_options)[0].resource_record_value]
   ttl                    = 60
 }
 
 resource "aws_acm_certificate_validation" "cert_valid" {
-  certificate_arn         = aws_acm_certificate.cert.arn
+  count = length(var.domain)
+  certificate_arn         = aws_acm_certificate.cert[count.index].arn
 }

@@ -31,11 +31,12 @@ resource "aws_lb_target_group" "alb_target" {
 
 # LoadBalancer에 Listener 연결, 내부 Target 쪽으로 Forwarding
 resource "aws_lb_listener" "alb_front_https" {
+    count = length(var.domain)
     load_balancer_arn = aws_lb.alb.arn
     port = 443
     protocol = "HTTPS"
     ssl_policy        = "ELBSecurityPolicy-2016-08"
-    certificate_arn   = aws_acm_certificate_validation.cert_valid.certificate_arn
+    certificate_arn   = aws_acm_certificate_validation.cert_valid[count.index].certificate_arn
    
     default_action {
         type = "forward"
