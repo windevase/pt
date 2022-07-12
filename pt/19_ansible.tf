@@ -13,7 +13,7 @@ sudo yum update
 sudo amazon-linux-extras enable ansible2
 sudo yum install -y ansible
 sudo "echo '${var.key.private}' > /home/ec2-user/id_rsa"
-sudo "chmod 600 /home/ubuntu/${var.key.name}"
+sudo "chmod 600 /home/ec2-user/id_rsa"
 EOF
 
     tags = {
