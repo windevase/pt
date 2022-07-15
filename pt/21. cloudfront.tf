@@ -37,7 +37,7 @@ resource "aws_cloudfront_distribution" "prod_distribution" {
         default_ttl = 3600
         max_ttl = 86400
     }
-    # Distributes content to US and Europe -https://aws.amazon.com/ko/cloudfront/pricing/ 참고
+    # Distributes content to US and Europe - 요금 계층 https://aws.amazon.com/ko/cloudfront/pricing/ 참고
     price_class = "PriceClass_200"
     # Restricts who is able to access this content 접속 제한 설정
     restrictions {
