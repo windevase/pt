@@ -10,7 +10,7 @@ resource "aws_s3_bucket" "tbz" {
 }
 
 # S3 버켓 ACL 권한 설정
-resource "aws_s3_bucket_acl" "example_bucket_acl" {
+resource "aws_s3_bucket_acl" "tbz_bucket_acl" {
   bucket = aws_s3_bucket.tbz.id
   acl    = "public-read"
 }
