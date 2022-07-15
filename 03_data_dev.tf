@@ -8,7 +8,7 @@ module "dev" {
         # public               = file("./key/mhan2.key.pub")
         # private              = file("./key/mhan2.key")
     }
-    domain                   = []
+    domain                   = ["www.tbz.com"]
     region = {
         region               = "ap-northeast-2"
         az                   = ["a", "c"]
