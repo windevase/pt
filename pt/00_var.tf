@@ -92,7 +92,7 @@ variable "database" {
         engine_version       = string
         instance_class       = string
         multi_az             = string
-        db_name                 = string
+        db_name              = string
         username             = string
         password             = string
         backup_window        = string
