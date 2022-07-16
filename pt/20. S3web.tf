@@ -2,17 +2,37 @@
 resource "aws_s3_bucket" "tbz" {
   bucket = var.domain[0]
 
-  lifecycle {
-    ignore_changes = [
-      website
-    ]
-  }
+}
+
+resource "aws_s3_bucket_policy" "tbzpy" {  
+  bucket = aws_s3_bucket.tbz.id   
+policy = <<POLICY
+{
+  "Version":"2012-10-17",
+  "Statement":[
+    {
+      "Sid":"AddPerm",
+      "Effect":"Allow",
+      "Principal": "*",
+      "Action":["s3:GetObject"],
+      "Resource":["arn:aws:s3:::${aws_s3_bucket.tbz.id}/*"]
+    }
+  ]
+}
+POLICY
 }
 
 # S3 버켓 ACL 권한 설정
 resource "aws_s3_bucket_acl" "tbz_bucket_acl" {
   bucket = aws_s3_bucket.tbz.id
   acl    = "public-read"
+}
+
+resource "aws_s3_bucket_versioning" "versioning_tbz" {
+  bucket = aws_s3_bucket.tbz.id
+  versioning_configuration {
+    status = "Enabled"
+  }
 }
 
 # S3 정적 웹 호스팅 설정
@@ -26,22 +46,76 @@ resource "aws_s3_bucket_website_configuration" "tbzweb" {
   error_document {
     key = "error.html"
   }
-
-  routing_rule {
-    condition {
-      key_prefix_equals = "docs/"
-    }
-    redirect {
-      replace_key_prefix_with = "documents/"
-    }
-  }
 }
 
-#s3 버켓에 파일 업로드
-resource "aws_s3_object" "upload" {
-  for_each = fileset("./documents/", "**")
-  bucket = aws_s3_bucket.tbz.bucket
-  key = each.value
-  source = "./documents/${each.value}"
-  etag = filemd5("./documents/${each.value}")
+
+#s3 버켓에 파일 업로드, 형식마다 따로 content_type 설정해야 동작
+resource "aws_s3_object" "html" {
+  for_each     = fileset("./documents/", "*.html")
+  bucket       = aws_s3_bucket.tbz.bucket
+  acl          = "public-read"
+  key          = each.value
+  source       = "./documents/${each.value}"
+  etag         = filemd5("./documents/${each.value}")
+  content_type = "text/html"
+}
+
+resource "aws_s3_object" "svg" {
+  for_each = fileset("./documents/", "assets/css/images/*.svg")
+  bucket       = aws_s3_bucket.tbz.bucket
+  acl          = "public-read"  
+  key          = each.value
+  source       = "./documents/${each.value}"
+  etag         = filemd5("./documents/${each.value}")
+  content_type = "image/svg+xml"
+}
+
+resource "aws_s3_object" "css" {
+  for_each = fileset("./documents/", "assets/css/*.css")
+  bucket       = aws_s3_bucket.tbz.bucket
+  acl          = "public-read"
+  key          = each.value
+  source       = "./documents/${each.value}"
+  etag         = filemd5("./documents/${each.value}")
+  content_type = "text/css"
+}
+
+resource "aws_s3_object" "js" {
+  for_each = fileset("./documents/", "assets/js/*.js")
+  bucket       = aws_s3_bucket.tbz.bucket
+  acl          = "public-read"
+  key          = each.value
+  source       = "./documents/${each.value}"
+  etag         = filemd5("./documents/${each.value}")
+  content_type = "text/javascript"
+}
+
+resource "aws_s3_object" "webfontssvg" {
+  for_each = fileset("./documents/", "assets/webfonts/*.svg")
+  bucket       = aws_s3_bucket.tbz.bucket
+  acl          = "public-read"
+  key          = each.value
+  source       = "./documents/${each.value}"
+  etag         = filemd5("./documents/${each.value}")
+  content_type = "image/svg+xml"
+}
+
+resource "aws_s3_object" "webfontswoff" {
+  for_each = fileset("./documents/", "assets/webfonts/*.woff")
+  bucket       = aws_s3_bucket.tbz.bucket
+  acl          = "public-read"
+  key          = each.value
+  source       = "./documents/${each.value}"
+  etag         = filemd5("./documents/${each.value}")
+  content_type = "application/font-woff"
+}
+
+resource "aws_s3_object" "imagesjpg" {
+  for_each = fileset("./documents/", "images/*.jpg")
+  bucket       = aws_s3_bucket.tbz.bucket
+  acl          = "public-read"
+  key          = each.value
+  source       = "./documents/${each.value}"
+  etag         = filemd5("./documents/${each.value}")
+  content_type = "image/jpeg"
 }
