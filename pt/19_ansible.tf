@@ -4,7 +4,7 @@ resource "aws_instance" "ansible" {
     key_name = var.key.name
     vpc_security_group_ids = [aws_security_group.sg_ansible.id]
     subnet_id = aws_subnet.web_sub[0].id
-    private_ip = "10.1.0.4"
+    private_ip = "10.1.10.4"
     iam_instance_profile = aws_iam_instance_profile.profile_ansible.name
     user_data = <<EOF
 #!/bin/bash
