@@ -100,6 +100,7 @@ variable "database" {
 }
 variable "ansible" {
     type        = object({
+        github               = string
         ami                  = string
         instance_type        = string
     })

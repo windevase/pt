@@ -97,6 +97,7 @@ module "svc" {
         count                = 10
     }
     ansible = {
+        github               = "https://github.com/mhan808/Ansible"
         ami                  = "ami-0252a84eb1d66c2a0"
         instance_type        = "t2.micro"
     }

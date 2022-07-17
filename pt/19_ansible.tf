@@ -4,16 +4,26 @@ resource "aws_instance" "ansible" {
     key_name = var.key.name
     vpc_security_group_ids = [aws_security_group.sg_ansible.id]
     subnet_id = aws_subnet.web_sub[0].id
+    private_ip = "10.1.0.4"
     iam_instance_profile = aws_iam_instance_profile.profile_ansible.name
     user_data = <<EOF
 #!/bin/bash
+sudo su -
+echo '${var.key.private}' > /root/.ssh/id_rsa
+chmod 600 /root/.ssh/id_rsa
 sed -i "s/#Port 22/Port ${var.sg_ansible.from_port}/g" /etc/ssh/sshd_config
 systemctl restart sshd
-sudo yum update
-sudo amazon-linux-extras enable ansible2
-sudo yum install -y ansible
-sudo "echo '${var.key.private}' > /home/ec2-user/id_rsa"
-sudo "chmod 600 /home/ec2-user/id_rsa"
+yum install -y git
+git clone '${var.ansible.github}' /etc/ansible/
+amazon-linux-extras enable ansible2
+amazon-linux-extras install -y ansible2
+# mkdir /root/test
+yum update -y
+# mkdir /root/test1
+rm -rf /etc/ansible/ansible.cfg.*
+# mkdir /root/test2
+ansible-playbook /etc/ansible/playbooks/*.yaml
+# mkdir /root/test3
 EOF
 
     tags = {
