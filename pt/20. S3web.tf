@@ -1,6 +1,6 @@
 # S3 버켓 생성
 resource "aws_s3_bucket" "tbz" {
-  bucket = var.domain[0]
+  bucket = "${format("%s.%s", "home", var.domain[0])}"
 
 }
 
