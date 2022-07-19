@@ -9,6 +9,7 @@ resource "aws_launch_configuration" "as_conf" {
   #!/bin/bash
   systemctl start httpd
   systmectl restart httpd
+  systemctl enable httpd
   EOF
 }
 
