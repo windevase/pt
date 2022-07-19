@@ -8,7 +8,7 @@ module "svc" {
         # public               = file("./key/mhan2.key.pub")
         # private              = file("./key/mhan2.key")
     }
-    domain                   = ["bespin.link"]
+    domain                   = ["khj76.xyz"]
     region = {
         region               = "ap-northeast-2"
         az                   = ["a", "c"]
@@ -67,7 +67,7 @@ module "svc" {
         instance_type        = "t2.micro"
     }
     web = {
-        count                = 2
+        count                = 1
         ami                  = "ami-0e1d09d8b7c751816"
         instance_type        = "t2.micro"
     }

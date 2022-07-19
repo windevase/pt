@@ -6,7 +6,7 @@ resource "aws_route53_zone" "route53_zone" {
 resource "aws_route53_record" "route53_record" {
   count = length(var.domain)
   zone_id = aws_route53_zone.route53_zone[count.index].zone_id
-  name    = "${format("%s.%s", var.name, var.domain[count.index])}"
+  name    = "${format("%s.%s", "www", var.domain[count.index])}"
   type    = "A"
 
   alias {
