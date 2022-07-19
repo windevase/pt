@@ -23,7 +23,7 @@ resource "aws_db_instance" "database" {
 
 resource "aws_db_subnet_group" "db_subg" {
     name = "db-sg"
-    subnet_ids = [aws_subnet.db_sub[0].id, aws_subnet.db_sub[1].id]
+    subnet_ids = "${aws_subnet.db_sub.*.id}"
     # vpc_id = aws_vpc.vpc.id
     tags = {
         Name = "${format("%s-subnet-group", var.name)}"
