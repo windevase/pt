@@ -29,7 +29,7 @@ resource "aws_autoscalingplans_scaling_plan" "atsp" {
     disable_dynamic_scaling = true
 
     max_capacity       = 10
-    min_capacity       = 1
+    min_capacity       = 2
     resource_id        = format("autoScalingGroup/%s", aws_autoscaling_group.atsg.name)
     scalable_dimension = "autoscaling:autoScalingGroup:DesiredCapacity"
     service_namespace  = "autoscaling"
@@ -39,7 +39,7 @@ resource "aws_autoscalingplans_scaling_plan" "atsp" {
         predefined_scaling_metric_type = "ASGAverageCPUUtilization"
       }
 
-      target_value = 50
+      target_value = 30
     }
 
     predictive_scaling_max_capacity_behavior = "SetForecastCapacityToMaxCapacity"
