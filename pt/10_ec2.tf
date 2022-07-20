@@ -6,9 +6,7 @@ resource "aws_instance" "web" {
     key_name = var.key.name
     vpc_security_group_ids = [aws_security_group.sg_web.id]
     subnet_id = aws_subnet.web_sub[(count.index)%2].id
-    depends_on = [
-    aws_route_table.nat_route
-  ]
+    depends_on = [aws_security_group.sg_web]
     user_data = <<EOF
 #!/bin/bash
 sudo su -

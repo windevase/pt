@@ -6,9 +6,7 @@ resource "aws_instance" "ansible" {
     subnet_id = aws_subnet.web_sub[0].id
     private_ip = "10.1.10.4"
     iam_instance_profile = aws_iam_instance_profile.profile_ansible.name
-    depends_on = [
-    aws_instance.web
-  ]
+    depends_on = [aws_route_table_association.ngwrt_web_ass]
     user_data = <<EOF
 #!/bin/bash
 sudo su -
@@ -21,6 +19,7 @@ yum install -y git
 git clone '${var.ansible.github}' /etc/ansible/
 amazon-linux-extras enable ansible2
 amazon-linux-extras install -y ansible2
+ansible-playbook /etc/ansible/web.yaml -u ec2-user
 EOF
 
     tags = {
