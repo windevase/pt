@@ -33,14 +33,14 @@ module "svc" {
     sg_web = [
         {
             description      = "SSH-bastion"
-            from_port        = 22
-            to_port          = 22
+            from_port        = 10022
+            to_port          = 10022
             protocol         = "tcp"
         },
         {
             description      = "SSH-ansible"
-            from_port        = 22
-            to_port          = 22
+            from_port        = 10022
+            to_port          = 10022
             protocol         = "tcp"
         },
         {
