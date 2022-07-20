@@ -16,17 +16,11 @@ echo '${var.key.private}' > /root/.ssh/id_rsa
 chmod 600 /root/.ssh/id_rsa
 sed -i "s/#Port 22/Port ${var.sg_ansible.from_port}/g" /etc/ssh/sshd_config
 systemctl restart sshd
+yum install -y python-boto3
 yum install -y git
 git clone '${var.ansible.github}' /etc/ansible/
 amazon-linux-extras enable ansible2
 amazon-linux-extras install -y ansible2
-# mkdir /root/test
-yum update -y
-# mkdir /root/test1
-rm -rf /etc/ansible/ansible.cfg.*
-# mkdir /root/test2
-ansible-playbook /etc/ansible/playbooks/*.yaml
-# mkdir /root/test3
 EOF
 
     tags = {

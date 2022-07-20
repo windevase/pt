@@ -112,7 +112,7 @@ resource "aws_security_group" "sg_web" {
             protocol = var.sg_web.1.protocol
             cidr_blocks = []
             ipv6_cidr_blocks = []
-            security_groups = [aws_security_group.sg_alb.id]
+            security_groups = [aws_security_group.sg_ansible.id]
             prefix_list_ids = []
             self = false
         },

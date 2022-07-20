@@ -7,10 +7,11 @@ resource "aws_instance" "bastion" {
     iam_instance_profile = aws_iam_instance_profile.profile_bastion.name
     user_data = <<EOF
 #!/bin/bash
+sudo su -
 sed -i "s/#Port 22/Port ${var.sg_bastion.from_port}/g" /etc/ssh/sshd_config
 systemctl restart sshd
-sudo "echo '${var.key.private}' > /home/ec2-user/id_rsa"
-sudo "chmod 600 /home/ec2-user/id_rsa"
+echo '${var.key.private}' > /root/.ssh/id_rsa
+chmod 600 /root/.ssh/id_rsa
 EOF
 
     tags = {

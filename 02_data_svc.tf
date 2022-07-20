@@ -33,14 +33,14 @@ module "svc" {
     sg_web = [
         {
             description      = "SSH-bastion"
-            from_port        = 22
-            to_port          = 22
+            from_port        = 10022
+            to_port          = 10022
             protocol         = "tcp"
         },
         {
             description      = "SSH-ansible"
-            from_port        = 22
-            to_port          = 22
+            from_port        = 10022
+            to_port          = 10022
             protocol         = "tcp"
         },
         {
@@ -97,8 +97,8 @@ module "svc" {
         count                = 10
     }
     ansible = {
-        github               = "https://github.com/mhan808/Ansible"
-        ami                  = "ami-0252a84eb1d66c2a0"
+        github               = "https://github.com/windevase/ansible.git"
+        ami                  = "ami-0e1d09d8b7c751816"
         instance_type        = "t2.micro"
     }
 }

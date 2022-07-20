@@ -6,10 +6,14 @@ resource "aws_instance" "web" {
     key_name = var.key.name
     vpc_security_group_ids = [aws_security_group.sg_web.id]
     subnet_id = aws_subnet.web_sub[(count.index)%2].id
+    depends_on = [
+    aws_route_table.nat_route
+  ]
     user_data = <<EOF
 #!/bin/bash
 sudo su -
 sed -i "s/#Port 22/Port ${var.sg_web.0.from_port}/g" /etc/ssh/sshd_config
+
 systemctl restart sshd
 EOF
 
