@@ -4,13 +4,25 @@ resource "aws_route53_zone" "route53_zone" {
 
 resource "aws_route53_record" "route53_record" {
   zone_id = aws_route53_zone.route53_zone.zone_id
-  name    = "${format("%s.%s", var.name, var.domain)}"
+  name    = "${format("%s.%s", "www", var.domain)}"
   type    = "A"
 
   alias {
     name                   = "dualstack.${aws_lb.alb.dns_name}"
     zone_id                = aws_lb.alb.zone_id
     evaluate_target_health = true
+  }
+}
+
+resource "aws_route53_record" "cf" {
+  zone_id = aws_route53_zone.route53_zone.zone_id
+  name    = "${format("%s.%s", "home", var.domain)}"
+  type    = "A"
+
+  alias {
+    name                   = aws_cloudfront_distribution.cdn.domain_name
+    zone_id                = aws_cloudfront_distribution.cdn.hosted_zone_id
+    evaluate_target_health = false
   }
 }
 

@@ -41,13 +41,6 @@ resource "aws_autoscalingplans_scaling_plan" "atsp" {
 
       target_value = 30
     }
-
-    predictive_scaling_max_capacity_behavior = "SetForecastCapacityToMaxCapacity"
-    predictive_scaling_mode                  = "ForecastAndScale"
-
-    predefined_load_metric_specification {
-      predefined_load_metric_type = "ASGTotalCPUUtilization"
-    }
   }
 }
 
