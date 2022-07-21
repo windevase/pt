@@ -9,7 +9,7 @@ variable "key" {
     })
 }
 variable "domain" {
-    type                     = list(string)
+    type                     = string
 }
 variable "region" {
     type        = object({

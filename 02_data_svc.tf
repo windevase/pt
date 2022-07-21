@@ -8,7 +8,7 @@ module "svc" {
         # public               = file("./key/mhan2.key.pub")
         # private              = file("./key/mhan2.key")
     }
-    domain                   = ["khj76.xyz"]
+    domain                   = "khj76.xyz"
     region = {
         region               = "ap-northeast-2"
         az                   = ["a", "c"]

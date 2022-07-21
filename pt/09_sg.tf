@@ -116,6 +116,17 @@ resource "aws_security_group" "sg_web" {
             prefix_list_ids = []
             self = false
         },
+        {
+            description = var.sg_web.2.description
+            from_port = var.sg_web.2.from_port
+            to_port = var.sg_web.2.to_port
+            protocol = var.sg_web.2.protocol
+            cidr_blocks = []
+            ipv6_cidr_blocks = []
+            security_groups = [aws_security_group.sg_alb.id]
+            prefix_list_ids = []
+            self = false
+        },
     ]
 
     egress = [

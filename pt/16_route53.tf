@@ -1,12 +1,10 @@
 resource "aws_route53_zone" "route53_zone" {
-  count = length(var.domain)
-  name       = var.domain[count.index]
+  name       = var.domain
 }
 
 resource "aws_route53_record" "route53_record" {
-  count = length(var.domain)
-  zone_id = aws_route53_zone.route53_zone[count.index].zone_id
-  name    = "${format("%s.%s", "www", var.domain[count.index])}"
+  zone_id = aws_route53_zone.route53_zone.zone_id
+  name    = "${format("%s.%s", var.name, var.domain)}"
   type    = "A"
 
   alias {
@@ -17,9 +15,8 @@ resource "aws_route53_record" "route53_record" {
 }
 
 resource "aws_acm_certificate" "cert" {
-  count = length(var.domain)
-  domain_name       = var.domain[count.index]
-  subject_alternative_names = ["*.${var.domain[count.index]}"]
+  domain_name       = var.domain
+  subject_alternative_names = ["*.${var.domain}"]
   validation_method = "DNS"
 
   lifecycle {
@@ -28,15 +25,14 @@ resource "aws_acm_certificate" "cert" {
 }
 
 resource "aws_route53_record" "route53_record_cert" {
-  count = length(var.domain)
-  zone_id = aws_route53_zone.route53_zone[count.index].zone_id
-  name                   = tolist(aws_acm_certificate.cert[count.index].domain_validation_options)[0].resource_record_name
-  type                   = tolist(aws_acm_certificate.cert[count.index].domain_validation_options)[0].resource_record_type
-  records                = [tolist(aws_acm_certificate.cert[count.index].domain_validation_options)[0].resource_record_value]
+  zone_id = aws_route53_zone.route53_zone.zone_id
+  name                   = tolist(aws_acm_certificate.cert.domain_validation_options)[0].resource_record_name
+  type                   = tolist(aws_acm_certificate.cert.domain_validation_options)[0].resource_record_type
+  records                = [tolist(aws_acm_certificate.cert.domain_validation_options)[0].resource_record_value]
   ttl                    = 60
 }
 
 resource "aws_acm_certificate_validation" "cert_valid" {
-  count = length(var.domain)
-  certificate_arn         = aws_acm_certificate.cert[count.index].arn
+  certificate_arn         = aws_acm_certificate.cert.arn
+  validation_record_fqdns = ["${aws_route53_record.route53_record_cert.fqdn}"]
 }
