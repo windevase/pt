@@ -85,9 +85,9 @@ module "svc" {
         engine_version       = "8.0.23"
         instance_class       = "db.t3.micro"
         multi_az             = "true"
-        db_name              = "petclinic"
+        db_name              = "random"
         username             = "root"
-        password             = "petclinic"
+        password             = "random123"
         backup_window        = "03:00-03:30"
     }
     backup = {
