@@ -1,15 +1,19 @@
 #cloudfront s3와 연결, 포트 커스터마이징, ssl 유형 설정
 resource "aws_cloudfront_distribution" "cdn" {
+  depends_on = [aws_s3_bucket.tbz]
   origin {
     domain_name = aws_s3_bucket.tbz.website_endpoint
     origin_id   = "S3-${aws_s3_bucket.tbz.bucket}"
-    custom_origin_config {
+    custom_origin_config {      
       http_port              = 80
       https_port             = 443
-      origin_protocol_policy = "http-only"
+      origin_protocol_policy = "match-viewer"
       origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
     }
   }
+
+  # aliases = ["${format("%s.%s", "home", var.domain)}"]
+  
   # By default, show index.html file -index 파일 형식 기본값
   default_root_object = "index.html"
   enabled             = true

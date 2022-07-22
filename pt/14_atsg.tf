@@ -26,7 +26,7 @@ resource "aws_autoscalingplans_scaling_plan" "atsp" {
   }
 
   scaling_instruction {
-    disable_dynamic_scaling = true
+    disable_dynamic_scaling = false
 
     max_capacity       = 10
     min_capacity       = 2
