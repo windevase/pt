@@ -32,14 +32,6 @@ resource "aws_acm_certificate" "certue" {
   }
 }
 
-resource "aws_route53_record" "route53_record_certue" {
-  zone_id = aws_route53_zone.route53_zone.zone_id
-  name                   = tolist(aws_acm_certificate.certue.domain_validation_options)[0].resource_record_name
-  type                   = tolist(aws_acm_certificate.certue.domain_validation_options)[0].resource_record_type
-  records                = [tolist(aws_acm_certificate.certue.domain_validation_options)[0].resource_record_value]
-  ttl                    = 60
-}
-
 resource "aws_acm_certificate_validation" "cert_validue" {
   provider = aws.us-east-1
   certificate_arn         = aws_acm_certificate.certue.arn

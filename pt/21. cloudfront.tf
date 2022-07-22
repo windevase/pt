@@ -1,57 +1,51 @@
-#cloudfront s3와 연결, 포트 커스터마이징, ssl 유형 설정
 resource "aws_cloudfront_distribution" "cdn" {
-  depends_on = [aws_s3_bucket.tbz]
+  aliases = ["${format("%s.%s", "home", var.domain)}"]
+
+  default_cache_behavior {
+    allowed_methods        = ["DELETE", "OPTIONS", "POST", "PATCH", "HEAD", "GET", "PUT"]
+    cache_policy_id        = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+    cached_methods         = ["GET", "HEAD"]
+    compress               = "true"
+    default_ttl            = "0"
+    max_ttl                = "0"
+    min_ttl                = "0"
+    smooth_streaming       = "false"
+    target_origin_id       = aws_s3_bucket.tbz.bucket_regional_domain_name
+    viewer_protocol_policy = "redirect-to-https"
+  }
+
+  default_root_object = "index.html"
+  enabled             = "true"
+  http_version        = "http2"
+  is_ipv6_enabled     = "true"
+
   origin {
-    domain_name = aws_s3_bucket.tbz.website_endpoint
-    origin_id   = "S3-${aws_s3_bucket.tbz.bucket}"
-    custom_origin_config {      
-      http_port              = 80
-      https_port             = 443
+    connection_attempts = "3"
+    connection_timeout  = "10"
+    domain_name         = aws_s3_bucket.tbz.bucket_regional_domain_name
+    origin_id           = aws_s3_bucket.tbz.bucket_regional_domain_name
+    custom_origin_config {
+      http_port              = "80"
+      https_port             = "443"
       origin_protocol_policy = "match-viewer"
       origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
     }
   }
 
-  # aliases = ["${format("%s.%s", "home", var.domain)}"]
-  
-  # By default, show index.html file -index 파일 형식 기본값
-  default_root_object = "index.html"
-  enabled             = true
-  # If there is a 404, return index.html with a HTTP 200 Response -에러 코드 출력
-  custom_error_response {
-    error_caching_min_ttl = 3000
-    error_code            = 404
-    response_code         = 200
-    response_page_path    = "/index.html"
-  }
-  default_cache_behavior {
-    allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
-    cached_methods   = ["GET", "HEAD"]
-    target_origin_id = "S3-${aws_s3_bucket.tbz.bucket}"
-    # Forward all query strings, cookies and headers - 쿼리, 쿠키, 헤더 캐싱
-    forwarded_values {
-      query_string = true
-      cookies {
-        forward = "none"
-      }
-    }
-
-    viewer_protocol_policy = "redirect-to-https"
-    min_ttl                = 0
-    default_ttl            = 3600
-    max_ttl                = 86400
-  }
-  # Distributes content to US and Europe - 요금 계층 https://aws.amazon.com/ko/cloudfront/pricing/ 참고
   price_class = "PriceClass_200"
-  # Restricts who is able to access this content 접속 제한 설정
+
   restrictions {
     geo_restriction {
-      # type of restriction, blacklist, whitelist or none -지역 제한 설정
       restriction_type = "none"
     }
   }
-  # SSL certificate for the service. ssl 인증서 사용 유무
+
+  retain_on_delete = "false"
+
   viewer_certificate {
     acm_certificate_arn   = aws_acm_certificate_validation.cert_validue.certificate_arn
+    cloudfront_default_certificate = "false"
+    minimum_protocol_version       = "TLSv1.2_2021"
+    ssl_support_method             = "sni-only"
   }
 }
