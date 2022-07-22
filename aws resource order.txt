@@ -32,5 +32,6 @@ S3 web
 
 cloudfront(약자 cdn)
 
+RDS는 순서 상관 없이 생성
 
 
