@@ -20,8 +20,8 @@ resource "aws_route53_record" "s3" {
   type    = "A"
 
   alias {
-    name                   = aws_s3_bucket.tbz.website_domain
-    zone_id                = aws_s3_bucket.tbz.hosted_zone_id
+    name                   = aws_cloudfront_distribution.cdn.website_domain
+    zone_id                = aws_cloudfront_distribution.cdn.hosted_zone_id
     evaluate_target_health = false
   }
 }
