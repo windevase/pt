@@ -1,7 +1,9 @@
+#도메인 영역
 resource "aws_route53_zone" "route53_zone" {
   name       = var.domain
 }
 
+#로드발란서 레코드
 resource "aws_route53_record" "route53_record" {
   zone_id = aws_route53_zone.route53_zone.zone_id
   name    = "${format("%s.%s", "www", var.domain)}"
@@ -14,6 +16,7 @@ resource "aws_route53_record" "route53_record" {
   }
 }
 
+#CDN 레코드
 resource "aws_route53_record" "s3" {
   zone_id = aws_route53_zone.route53_zone.zone_id
   name    = "${format("%s.%s", "home", var.domain)}"

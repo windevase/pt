@@ -27,11 +27,9 @@ resource "aws_autoscalingplans_scaling_plan" "atsp" {
   }
 
   scaling_instruction {
-    disable_dynamic_scaling = false
-
     max_capacity       = 10
     min_capacity       = 2
-    resource_id        = format("autoScalingGroup/%s", "atsg")
+    resource_id        = format("autoScalingGroup/%s", aws_autoscaling_group.atsg.name)
     scalable_dimension = "autoscaling:autoScalingGroup:DesiredCapacity"
     service_namespace  = "autoscaling"
 

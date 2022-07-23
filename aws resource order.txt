@@ -16,15 +16,15 @@ web ec2
 
 ansible ec2
 
+Route53
+
+ACM cert(ap-northeast-2=ALB, us-east-1=cloudfront)
+
 ami
 
 ASG launch conf
 
 ATS group
-
-Route53
-
-ACM cert(ap-northeast-2=ALB, us-east-1=cloudfront)
 
 ALB
 
@@ -32,6 +32,4 @@ S3 web
 
 cloudfront(약자 cdn)
 
-RDS는 순서 상관 없이 생성
-
-
+RDS는 의존성 없음
