@@ -9,7 +9,7 @@ resource "aws_db_instance" "database" {
     password               = var.database.password
     db_subnet_group_name   = aws_db_subnet_group.db_subg.id
     vpc_security_group_ids = [aws_security_group.sg_db.id]
-    # availability_zone      = "ap-northeast-2a"
+    availability_zone      = "ap-northeast-2a"
     identifier             = "${format("%s-db", var.name)}"
     enabled_cloudwatch_logs_exports = ["error", "audit", "general", "slowquery"]
     skip_final_snapshot    = true
