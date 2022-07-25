@@ -1,3 +1,4 @@
+#AutoScaling 시작 구성
 resource "aws_launch_configuration" "as_conf" {
   name = "${format("%s-as_conf", var.name)}"
   image_id = aws_ami_from_instance.web_ami.id

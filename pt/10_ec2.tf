@@ -11,8 +11,6 @@ resource "aws_instance" "web" {
 #!/bin/bash
 sudo su -
 sed -i "s/#Port 22/Port ${var.sg_web.0.from_port}/g" /etc/ssh/sshd_config
-amazon-linux-extras enable lamp-mariadb10.2-php7.2
-amazon-linux-extras install -y lamp-mariadb10.2-php7.2
 systemctl restart sshd
 EOF
 

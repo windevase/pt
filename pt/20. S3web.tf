@@ -1,7 +1,6 @@
 # S3 버켓 생성
 resource "aws_s3_bucket" "tbz" {
   bucket = "${format("%s.%s", "home", var.domain)}"
-
 }
 
 resource "aws_s3_bucket_policy" "tbzpy" {  

@@ -1,7 +1,9 @@
+#도메인 영역
 resource "aws_route53_zone" "route53_zone" {
   name       = var.domain
 }
 
+#로드발란서 레코드
 resource "aws_route53_record" "route53_record" {
   zone_id = aws_route53_zone.route53_zone.zone_id
   name    = "${format("%s.%s", "www", var.domain)}"
@@ -14,7 +16,8 @@ resource "aws_route53_record" "route53_record" {
   }
 }
 
-resource "aws_route53_record" "cf" {
+#CDN 레코드
+resource "aws_route53_record" "s3" {
   zone_id = aws_route53_zone.route53_zone.zone_id
   name    = "${format("%s.%s", "home", var.domain)}"
   type    = "A"
@@ -26,24 +29,3 @@ resource "aws_route53_record" "cf" {
   }
 }
 
-resource "aws_acm_certificate" "cert" {
-  domain_name       = var.domain
-  subject_alternative_names = ["*.${var.domain}"]
-  validation_method = "DNS"
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-resource "aws_route53_record" "route53_record_cert" {
-  zone_id = aws_route53_zone.route53_zone.zone_id
-  name                   = tolist(aws_acm_certificate.cert.domain_validation_options)[0].resource_record_name
-  type                   = tolist(aws_acm_certificate.cert.domain_validation_options)[0].resource_record_type
-  records                = [tolist(aws_acm_certificate.cert.domain_validation_options)[0].resource_record_value]
-  ttl                    = 60
-}
-
-resource "aws_acm_certificate_validation" "cert_valid" {
-  certificate_arn         = aws_acm_certificate.cert.arn
-}

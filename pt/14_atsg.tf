@@ -4,6 +4,7 @@ resource "aws_placement_group" "pg" {
 }
 
 resource "aws_autoscaling_group" "atsg" {
+  name = "${format("%s-atsg", var.name)}"
   min_size = var.atsg.min_size
   max_size = var.atsg.max_size
   health_check_grace_period = 60
@@ -26,8 +27,6 @@ resource "aws_autoscalingplans_scaling_plan" "atsp" {
   }
 
   scaling_instruction {
-    disable_dynamic_scaling = true
-
     max_capacity       = 10
     min_capacity       = 2
     resource_id        = format("autoScalingGroup/%s", aws_autoscaling_group.atsg.name)
