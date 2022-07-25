@@ -23,6 +23,7 @@ variable "cidr" {
         pub                  = list(string)
         web                  = list(string)
         db                   = list(string)
+        igwrt                = string
         ngwrt                = string
     })
 }
@@ -37,6 +38,16 @@ variable "sg_bastion" {
     })
 }
 variable "sg_bastion_eg" {
+    type        = object({
+        description          = string
+        from_port            = number
+        to_port              = number
+        protocol             = string
+        cidr_blocks          = list(string)
+        ipv6_cidr_blocks     = list(string)
+    })
+}
+variable "sg_alb_eg" {
     type        = object({
         description          = string
         from_port            = number

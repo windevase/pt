@@ -70,12 +70,12 @@ resource "aws_security_group" "sg_alb" {
 
   egress = [
     {
-      description      = ""
-      from_port        = 0
-      to_port          = 0
-      protocol         = "-1"
-      cidr_blocks      = ["0.0.0.0/0"]
-      ipv6_cidr_blocks = ["::/0"]
+      description      = var.sg_alb_eg.description
+      from_port        = var.sg_alb_eg.from_port
+      to_port          = var.sg_alb_eg.to_port
+      protocol         = var.sg_alb_eg.protocol
+      cidr_blocks      = var.sg_alb_eg.cidr_blocks
+      ipv6_cidr_blocks = var.sg_alb_eg.ipv6_cidr_blocks
       security_groups  = []
       prefix_list_ids  = []
       self             = false

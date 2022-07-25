@@ -20,6 +20,7 @@ module "svc" {
         web                  = ["10.1.10.0/24", "10.1.11.0/24"]     //web-a, web-c
         db                   = ["10.1.100.0/24", "10.1.101.0/24"]   //db-a, db-c
 
+        igwrt                = "0.0.0.0/0"
         ngwrt                = "0.0.0.0/0"
     }
     sg_bastion = {
@@ -31,6 +32,14 @@ module "svc" {
             ipv6_cidr_blocks = ["::/0"]
     }
     sg_bastion_eg = {
+            description      = ""
+            from_port        = 0
+            to_port          = 0
+            protocol         = "-1"
+            cidr_blocks      = ["0.0.0.0/0"]
+            ipv6_cidr_blocks = ["::/0"]
+    }
+    sg_alb_eg = {
             description      = ""
             from_port        = 0
             to_port          = 0
