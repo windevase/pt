@@ -20,7 +20,6 @@ resource "aws_instance" "ansible" {
     amazon-linux-extras enable ansible2
     amazon-linux-extras install -y ansible2
     ansible-playbook /etc/ansible/web.yaml -u ec2-user
-    ansible-playbook /etc/ansible/dbphp.yaml -u ec2-user
     EOF
 
   tags = {
