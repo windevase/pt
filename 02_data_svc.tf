@@ -3,10 +3,10 @@ module "svc" {
     name                     = "svc"
     key = {
         name                 = "team4-key"
-        public               = file("./key/hjko.pub")
-        private              = file("./key/hjko")
-        # public               = file("./key/mhan2.key.pub")
-        # private              = file("./key/mhan2.key")
+        # public               = file("./key/hjko.pub")
+        # private              = file("./key/hjko")
+        public               = file("./key/mhan2.key.pub")
+        private              = file("./key/mhan2.key")
     }
     domain                   = "khj76.xyz"
     email = {
@@ -180,6 +180,7 @@ module "svc" {
         count                = 10
     }
     lambda = {
-        function             = "./lambda/random.zip"
+        zip_file             = "./lambda/random.zip"
+        filename             = "lambda_function"
     }
 }

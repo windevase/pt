@@ -46,7 +46,6 @@ def lambda_handler(event, context) :
         response = client.send_email(Source = "cmhh0808@naver.com", Destination = {"ToAddresses" : [row[0]],}, Message = message)
     
     cursor.close()
-    connection.close()
     
     return {
         'statusCode': 200,

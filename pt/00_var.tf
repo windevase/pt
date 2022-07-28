@@ -211,6 +211,7 @@ variable "backup" {
 }
 variable "lambda" {
   type          = object({
-        function             = string
+        zip_file             = string
+        filename             = string
   })
 }

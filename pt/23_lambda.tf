@@ -1,7 +1,7 @@
 # Create IAM
-# AWSLambdaBasicExecutionRole
+# AWSLambdaRole
 resource "aws_iam_role" "role_lambda" {
-  name = format("%s-AWSLambdaBasicExecutionRole", var.name)
+  name = format("%s-AWSLambdaRole", var.name)
   path = "/"
 
   assume_role_policy = <<EOF
@@ -69,20 +69,29 @@ resource "aws_iam_role_policy" "role_policy_SES" {
 EOF
 }
 
-resource "aws_lambda_function" "random" {
-  filename      = var.lambda.function
+# Lambda가 EventBridge에서 실행될 수 있도록 권한 생성
+resource "aws_lambda_permission" "lambda_permission_cw" {
+  statement_id  = "AllowExecutionFromCloudWatch"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.function_random.arn
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.event_rule.arn
+}
+
+resource "aws_lambda_function" "function_random" {
+  filename      = var.lambda.zip_file
   function_name = "${var.name}-random"
   role          = aws_iam_role.role_lambda.arn
-  handler       = "random.lambda_handler"
+  handler       = "${var.lambda.filename}.lambda_handler"
 
-  source_code_hash = filebase64sha256("${var.lambda.function}")
+  source_code_hash = filebase64sha256("${var.lambda.zip_file}")
 
   runtime = "python3.9"
 
   vpc_config {
     # vpc_id                 = aws_vpc.vpc.id
-    subnet_ids             = aws_subnet.web_sub.*.id
-    security_group_ids     = [aws_security_group.sg_lambda.id]
+    subnet_ids         = aws_subnet.web_sub.*.id
+    security_group_ids = [aws_security_group.sg_lambda.id]
   }
 }
 
@@ -96,13 +105,13 @@ resource "aws_cloudwatch_event_rule" "event_rule" {
 resource "aws_cloudwatch_event_target" "event_target" {
   rule      = aws_cloudwatch_event_rule.event_rule.name
   target_id = format("%s-random-lambda", var.name)
-  arn       = aws_lambda_function.random.arn
+  arn       = aws_lambda_function.function_random.arn
 }
 
 resource "aws_lambda_permission" "lambda_permission_random" {
   statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.random.arn
+  function_name = aws_lambda_function.function_random.arn
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.event_rule.arn
 }
