@@ -239,8 +239,8 @@ resource "aws_security_group" "sg_lambda" {
       from_port        = var.sg_lambda.from_port
       to_port          = var.sg_lambda.to_port
       protocol         = var.sg_lambda.protocol
-      cidr_blocks      = []
-      ipv6_cidr_blocks = []
+      cidr_blocks      = var.sg_lambda.cidr_blocks
+      ipv6_cidr_blocks = var.sg_lambda.ipv6_cidr_blocks
       security_groups  = []
       prefix_list_ids  = []
       self             = false

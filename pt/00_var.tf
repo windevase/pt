@@ -123,6 +123,8 @@ variable "sg_lambda" {
         from_port            = number
         to_port              = number
         protocol             = string
+        cidr_blocks          = string
+        ipv6_cidr_blocks     = string
     })
 }
 variable "sg_lambda_eg" {
