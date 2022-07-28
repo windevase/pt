@@ -241,7 +241,7 @@ resource "aws_security_group" "sg_lambda" {
       protocol         = var.sg_lambda.protocol
       cidr_blocks      = []
       ipv6_cidr_blocks = []
-      security_groups  = [aws_security_group.sg_bastion.id]
+      security_groups  = []
       prefix_list_ids  = []
       self             = false
     }
@@ -262,6 +262,6 @@ resource "aws_security_group" "sg_lambda" {
   ]
 
   tags = {
-    Name = "${format("%s-sg-ansible", var.name)}"
+    Name = "${format("%s-sg-lambda", var.name)}"
   }
 }
