@@ -180,6 +180,6 @@ module "svc" {
         count                = 10
     }
     lambda = {
-        function             = "./lambda/lambda.zip"
+        function             = "./lambda/random.zip"
     }
 }

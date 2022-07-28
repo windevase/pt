@@ -1,117 +1,117 @@
-# # Create IAM
-# # AWSLambdaBasicExecutionRole
-# resource "aws_iam_role" "role_lambda" {
-#   name = format("%s-AWSLambdaBasicExecutionRole", var.name)
-#   path = "/"
+# Create IAM
+# AWSLambdaBasicExecutionRole
+resource "aws_iam_role" "role_lambda" {
+  name = format("%s-AWSLambdaBasicExecutionRole", var.name)
+  path = "/"
 
-#   assume_role_policy = <<EOF
-# {
-#     "Version": "2012-10-17",
-#     "Statement": [
-#         {
-#             "Action": "sts:AssumeRole",
-#             "Principal": {
-#                "Service": "lambda.amazonaws.com"
-#             },
-#             "Effect": "Allow",
-#             "Sid": ""
-#         }
-#     ]
-# }
-# EOF
-# }
+  assume_role_policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": "sts:AssumeRole",
+            "Principal": {
+               "Service": "lambda.amazonaws.com"
+            },
+            "Effect": "Allow",
+            "Sid": ""
+        }
+    ]
+}
+EOF
+}
 
-# # AWSLambdaVPCAccessExecutionRole
-# resource "aws_iam_role_policy" "role_policy_lambda_vpc" {
-#   name   = format("%s-AWSLambdaVPCAccessExecutionRole", var.name)
-#   role   = aws_iam_role.role_lambda.id
-#   policy = <<EOF
-# {
-#     "Version": "2012-10-17",
-#     "Statement": [
-#         {
-#             "Effect": "Allow",
-#             "Action": [
-#                 "logs:CreateLogGroup",
-#                 "logs:CreateLogStream",
-#                 "logs:PutLogEvents",
-#                 "ec2:CreateNetworkInterface",
-#                 "ec2:DescribeNetworkInterfaces",
-#                 "ec2:DeleteNetworkInterface",
-#                 "ec2:AssignPrivateIpAddresses",
-#                 "ec2:UnassignPrivateIpAddresses"
-#             ],
-#             "Resource": "*"
-#         }
-#     ]
-# }
-# EOF
-# }
+# AWSLambdaVPCAccessExecutionRole
+resource "aws_iam_role_policy" "role_policy_lambda_vpc" {
+  name   = format("%s-AWSLambdaVPCAccessExecutionRole", var.name)
+  role   = aws_iam_role.role_lambda.id
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+                "ec2:CreateNetworkInterface",
+                "ec2:DescribeNetworkInterfaces",
+                "ec2:DeleteNetworkInterface",
+                "ec2:AssignPrivateIpAddresses",
+                "ec2:UnassignPrivateIpAddresses"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+EOF
+}
 
-# # AWS SES
-# resource "aws_iam_role_policy" "role_policy_SES" {
-#   name   = format("%s-SES", var.name)
-#   role   = aws_iam_role.role_lambda.id
-#   policy = <<EOF
-# {
-#     "Version": "2012-10-17",
-#     "Statement": [
-#         {
-#             "Effect": "Allow",
-#             "Action": [
-#                 "ses:SendEmail",
-#                 "ses:SendRawEmail"
-#             ],
-#             "Resource": "*"
-#         }
-#     ]
-# }
-# EOF
-# }
+# AWS SES
+resource "aws_iam_role_policy" "role_policy_SES" {
+  name   = format("%s-SES", var.name)
+  role   = aws_iam_role.role_lambda.id
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ses:SendEmail",
+                "ses:SendRawEmail"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+EOF
+}
 
-# # resource "aws_lambda_permission" "lambda_permission_cw_s3" {
-# #   statement_id  = "AllowExecutionFromCloudWatch"
-# #   action        = "lambda:InvokeFunction"
-# #   function_name = aws_lambda_function.lambda_function_cw_s3.arn
-# #   principal     = "events.amazonaws.com"
-# #   source_arn    = aws_cloudwatch_event_rule.event_rule.arn
-# # }
+resource "aws_lambda_function" "random" {
+  filename      = var.lambda.function
+  function_name = "${var.name}-random"
+  role          = aws_iam_role.role_lambda.arn
+  handler       = "random.lambda_handler"
 
-# resource "aws_lambda_function" "lambda_function_random" {
-#   filename      = var.lambda.function
-#   function_name = "${var.name}-random"
-#   role          = aws_iam_role.role_lambda.arn
-#   handler       = "random.lambda_handler"
+  source_code_hash = filebase64sha256("${var.lambda.function}")
 
-#   source_code_hash = filebase64sha256("${var.lambda.function}")
+  runtime = "python3.9"
 
-#   runtime = "python3.9"
+  vpc_config {
+    # vpc_id                 = aws_vpc.vpc.id
+    subnet_ids             = aws_subnet.web_sub.*.id
+    security_group_ids     = [aws_security_group.sg_lambda.id]
+  }
+}
 
-#   vpc_config {
-#     # vpc_id                 = aws_vpc.vpc.id
-#     subnet_ids             = aws_subnet.web_sub.*.id
-#     security_group_ids     = [aws_security_group.sg_lambda.id]
-#   }
-# }
+resource "aws_cloudwatch_event_rule" "event_rule" {
+  name        = format("%s-event-rule", var.name)
+  description = "Application lottery in progress."
 
-# resource "aws_cloudwatch_event_rule" "event_rule" {
-#   name        = format("%s-event-rule", var.name)
-#   description = "Application lottery in progress."
+  schedule_expression = "cron(0 0 1 * ? *)"
+}
 
-#   schedule_expression = "cron(0 0 1 * ? *)"
-# }
+resource "aws_cloudwatch_event_target" "event_target" {
+  rule      = aws_cloudwatch_event_rule.event_rule.name
+  target_id = format("%s-random-lambda", var.name)
+  arn       = aws_lambda_function.random.arn
+}
 
-# resource "aws_cloudwatch_event_target" "event_target" {
-#   rule      = aws_cloudwatch_event_rule.event_rule.name
-#   target_id = format("%s-cw-lambda", var.name)
-#   arn       = aws_lambda_function.lambda_function_random.arn
-# }
+resource "aws_lambda_permission" "lambda_permission_random" {
+  statement_id  = "AllowExecutionFromCloudWatch"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.random.arn
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.event_rule.arn
+}
 
-# resource "aws_ses_email_identity" "source_email_identity" {
-#   email = var.email.source
-# }
+resource "aws_ses_email_identity" "source_email_identity" {
+  email = var.email.source
+}
 
-# resource "aws_ses_email_identity" "to_email_identity" {
-#   count = length(var.email.to)
-#   email = var.email.to[count.index]
-# }
+resource "aws_ses_email_identity" "to_email_identity" {
+  count = length(var.email.to)
+  email = var.email.to[count.index]
+}
