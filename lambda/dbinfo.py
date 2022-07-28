@@ -1,4 +1,4 @@
-db_host = ""
+db_host = "svc-db.cfmlcsyhy0vk.ap-northeast-2.rds.amazonaws.com"
 db_username = "root"
 db_password = "random123"
 db_name = "random"
