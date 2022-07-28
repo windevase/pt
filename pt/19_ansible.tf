@@ -6,7 +6,7 @@ resource "aws_instance" "ansible" {
   subnet_id              = aws_subnet.web_sub[0].id
   private_ip             = var.ansible.private_ip
   iam_instance_profile   = aws_iam_instance_profile.profile_ansible.name
-  depends_on             = [aws_route_table_association.ngwrt_web_ass]
+  depends_on             = [aws_route53_record.s3]
   user_data              = <<EOF
     #!/bin/bash
     sudo su -
