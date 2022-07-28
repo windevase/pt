@@ -112,6 +112,8 @@ module "svc" {
             from_port        = 25
             to_port          = 25
             protocol         = "tcp"
+            cidr_blocks      = ["0.0.0.0/0"]
+            ipv6_cidr_blocks = ["::/0"]
     }
     sg_lambda_eg = {
             description      = ""
