@@ -10,8 +10,8 @@ module "svc" {
     }
     domain                   = "khj76.xyz"
     email = {
-        source              = "cmhh0808@naver.com"
-        to                  = ["cmhh0808@naver.com", "cmhh1488@naver.com"]
+        source              = "rhghwls0716@naver.com"
+        to                  = ["rhghwls0716@gmail.com", "rhghwls0716@naver.com"]
     }
     region = {
         region               = "ap-northeast-2"

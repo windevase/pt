@@ -43,7 +43,7 @@ def lambda_handler(event, context) :
     rows = cursor.fetchall()
     
     for row in rows:
-        response = client.send_email(Source = "cmhh0808@naver.com", Destination = {"ToAddresses" : [row[0]],}, Message = message)
+        response = client.send_email(Source = "rhghwls0716@hanmail.net", Destination = {"ToAddresses" : [row[0]],}, Message = message)
     
     cursor.close()
     

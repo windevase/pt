@@ -108,14 +108,6 @@ resource "aws_cloudwatch_event_target" "event_target" {
   arn       = aws_lambda_function.function_random.arn
 }
 
-resource "aws_lambda_permission" "lambda_permission_random" {
-  statement_id  = "AllowExecutionFromCloudWatch"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.function_random.arn
-  principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.event_rule.arn
-}
-
 resource "aws_ses_email_identity" "source_email_identity" {
   email = var.email.source
 }
