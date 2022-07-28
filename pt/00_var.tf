@@ -11,6 +11,12 @@ variable "key" {
 variable "domain" {
     type                     = string
 }
+variable "email" {
+    type        = object({
+        source              = string
+        to                  = list(string)
+    })
+}
 variable "region" {
     type        = object({
         region               = string
@@ -111,6 +117,24 @@ variable "sg_ansible_eg" {
         ipv6_cidr_blocks     = list(string)
     })
 }
+variable "sg_lambda" {
+    type        = object({
+        description          = string
+        from_port            = number
+        to_port              = number
+        protocol             = string
+    })
+}
+variable "sg_lambda_eg" {
+    type        = object({
+        description          = string
+        from_port            = number
+        to_port              = number
+        protocol             = string
+        cidr_blocks          = list(string)
+        ipv6_cidr_blocks     = list(string)
+    })
+}
 variable "bastion" {
     type        = object({
         ami                  = string
@@ -182,4 +206,9 @@ variable "backup" {
         times                = list(string)
         count                = number
     })
+}
+variable "lambda" {
+  type          = object({
+        function             = string
+  })
 }

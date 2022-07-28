@@ -162,7 +162,7 @@ resource "aws_security_group" "sg_db" {
       protocol         = var.sg_db.protocol
       cidr_blocks      = []
       ipv6_cidr_blocks = []
-      security_groups  = [aws_security_group.sg_web.id]
+      security_groups  = [aws_security_group.sg_web.id, aws_security_group.sg_lambda.id]
       prefix_list_ids  = []
       self             = false
     }
@@ -216,6 +216,45 @@ resource "aws_security_group" "sg_ansible" {
       protocol         = var.sg_ansible_eg.protocol
       cidr_blocks      = var.sg_ansible_eg.cidr_blocks
       ipv6_cidr_blocks = var.sg_ansible_eg.ipv6_cidr_blocks
+      security_groups  = []
+      prefix_list_ids  = []
+      self             = false
+    }
+  ]
+
+  tags = {
+    Name = "${format("%s-sg-ansible", var.name)}"
+  }
+}
+
+// Lambda 보안그룹
+resource "aws_security_group" "sg_lambda" {
+  name        = format("%s-sg-lambda", var.name)
+  description = "security group for lambda"
+  vpc_id      = aws_vpc.vpc.id
+
+  ingress = [
+    {
+      description      = var.sg_lambda.description
+      from_port        = var.sg_lambda.from_port
+      to_port          = var.sg_lambda.to_port
+      protocol         = var.sg_lambda.protocol
+      cidr_blocks      = []
+      ipv6_cidr_blocks = []
+      security_groups  = [aws_security_group.sg_bastion.id]
+      prefix_list_ids  = []
+      self             = false
+    }
+  ]
+
+  egress = [
+    {
+      description      = var.sg_lambda_eg.description
+      from_port        = var.sg_lambda_eg.from_port
+      to_port          = var.sg_lambda_eg.to_port
+      protocol         = var.sg_lambda_eg.protocol
+      cidr_blocks      = var.sg_lambda_eg.cidr_blocks
+      ipv6_cidr_blocks = var.sg_lambda_eg.ipv6_cidr_blocks
       security_groups  = []
       prefix_list_ids  = []
       self             = false

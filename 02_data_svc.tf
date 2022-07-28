@@ -3,12 +3,16 @@ module "svc" {
     name                     = "svc"
     key = {
         name                 = "team4-key"
-        public               = file("./key/hjko.pub")
-        private              = file("./key/hjko")
-        # public               = file("./key/mhan2.key.pub")
-        # private              = file("./key/mhan2.key")
+        # public               = file("./key/hjko.pub")
+        # private              = file("./key/hjko")
+        public               = file("./key/mhan2.key.pub")
+        private              = file("./key/mhan2.key")
     }
     domain                   = "khj76.xyz"
+    email = {
+        source              = "cmhh0808@naver.com"
+        to                  = ["cmhh0808@naver.com", "cmhh1488@naver.com"]
+    }
     region = {
         region               = "ap-northeast-2"
         az                   = ["a", "c"]
@@ -103,6 +107,20 @@ module "svc" {
             cidr_blocks      = ["0.0.0.0/0"]
             ipv6_cidr_blocks = ["::/0"]
     }
+    sg_lambda = {
+            description      = "SMTP"
+            from_port        = 25
+            to_port          = 25
+            protocol         = "tcp"
+    }
+    sg_lambda_eg = {
+            description      = ""
+            from_port        = 0
+            to_port          = 0
+            protocol         = "-1"
+            cidr_blocks      = ["0.0.0.0/0"]
+            ipv6_cidr_blocks = ["::/0"]
+    }
     bastion = {
         ami                  = "ami-0e1d09d8b7c751816"
         instance_type        = "t2.micro"
@@ -158,5 +176,8 @@ module "svc" {
         interval_unit        = "HOURS"
         times                = ["00:00"]
         count                = 10
+    }
+    lambda = {
+        function             = "./lambda/lambda.zip"
     }
 }
