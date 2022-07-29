@@ -1,11 +1,11 @@
 import sys
 import logging
 import pymysql
-import dbinfo
+import info
 import json
 import boto3
 
-connection = pymysql.connect(host=dbinfo.db_host,port=3306,user=dbinfo.db_username,passwd=dbinfo.db_password,db=dbinfo.db_name)
+connection = pymysql.connect(host=info.db_host,port=3306,user=info.db_username,passwd=info.db_password,db=info.db_name)
 
 def lambda_handler(event, context) :
     
@@ -34,7 +34,7 @@ def lambda_handler(event, context) :
     cursor = connection.cursor()
     
     # 당첨자 추첨하여 winner table에 insert
-    cursor.execute("INSERT INTO winner SELECT * FROM user ORDER BY RAND() LIMIT 2")
+    cursor.execute("INSERT INTO winner SELECT * FROM user ORDER BY RAND() LIMIT %s", info.winner_num)
     connection.commit()
     
     # 메일을 보내기 위해 winner table에서 당첨자 email 가져오기
@@ -43,7 +43,7 @@ def lambda_handler(event, context) :
     rows = cursor.fetchall()
     
     for row in rows:
-        response = client.send_email(Source = "rhghwls0716@hanmail.net", Destination = {"ToAddresses" : [row[0]],}, Message = message)
+        response = client.send_email(Source = info.source, Destination = {"ToAddresses" : [row[0]],}, Message = message)
     
     cursor.close()
     
