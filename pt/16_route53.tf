@@ -28,4 +28,3 @@ resource "aws_route53_record" "s3" {
     evaluate_target_health = false
   }
 }
-

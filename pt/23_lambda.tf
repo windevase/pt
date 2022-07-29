@@ -108,11 +108,11 @@ resource "aws_cloudwatch_event_target" "event_target" {
   arn       = aws_lambda_function.function_random.arn
 }
 
-resource "aws_ses_email_identity" "source_email_identity" {
-  email = var.email.source
-}
+# resource "aws_ses_email_identity" "source_email_identity" {
+#   email = var.email.source
+# }
 
-resource "aws_ses_email_identity" "to_email_identity" {
-  count = length(var.email.to)
-  email = var.email.to[count.index]
-}
+# resource "aws_ses_email_identity" "to_email_identity" {
+#   count = length(var.email.to)
+#   email = var.email.to[count.index]
+# }

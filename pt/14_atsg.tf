@@ -13,6 +13,7 @@ resource "aws_autoscaling_group" "atsg" {
   force_delete              = false
   launch_configuration      = aws_launch_configuration.as_conf.name
   vpc_zone_identifier       = aws_subnet.web_sub.*.id
+  default_cooldown          = 20
 }
 
 // AutoScling 크기 조정 정책 설정
@@ -38,7 +39,7 @@ resource "aws_autoscalingplans_scaling_plan" "atsp" {
         predefined_scaling_metric_type = "ASGAverageCPUUtilization"
       }
 
-      target_value = 30
+      target_value = 10
     }
   }
 }

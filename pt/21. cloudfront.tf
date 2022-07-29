@@ -1,3 +1,4 @@
+#Cloudfront S3 정적 웹사이트 CDN 배포
 resource "aws_cloudfront_distribution" "cdn" {
   aliases = ["${format("%s.%s", "home", var.domain)}"]
 
