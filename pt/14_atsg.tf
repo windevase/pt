@@ -39,7 +39,7 @@ resource "aws_autoscalingplans_scaling_plan" "atsp" {
         predefined_scaling_metric_type = "ASGAverageCPUUtilization"
       }
 
-      target_value = 10
+      target_value = 30
     }
   }
 }
