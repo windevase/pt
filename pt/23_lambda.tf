@@ -89,7 +89,6 @@ resource "aws_lambda_function" "function_random" {
   runtime = "python3.9"
 
   vpc_config {
-    # vpc_id                 = aws_vpc.vpc.id
     subnet_ids         = aws_subnet.web_sub.*.id
     security_group_ids = [aws_security_group.sg_lambda.id]
   }
